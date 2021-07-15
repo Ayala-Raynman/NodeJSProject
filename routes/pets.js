@@ -3,8 +3,8 @@ var router = express.Router();
 const pets = require("../Model/PetsModel");//חיבור למודל
 
 //הצגת רשימת כל חיות
-router.get('/getall', function (req, res, next) {
-  pets.find({}, function (err, result) {
+router.get('/get', async (req, res, next) => {
+  await pets.find({}, function (err, result) {
     if (err) {
       res.send(err);
     } else {
@@ -12,15 +12,16 @@ router.get('/getall', function (req, res, next) {
     }
   });
 });
+
 //הוספת חיה
-router.post('/addpet', function (req, res, next) {
-  pets.create(req.body).then(function (p) {
+router.post('/post', async (req, res, next) => {
+  await pets.create(req.body).then(function (p) {
     res.send(p);
   }).catch(next);
 });
 //הוספת מספר חיות בו זמנית
-router.post('/addMany', function (req, res, next) {
-  pets.insertMany(req.body, function (err, result) {
+router.post('/addMany', async (req, res, next) => {
+  await pets.insertMany(req.body, function (err, result) {
     if (err) {
       res.send(err);
     } else {
@@ -29,19 +30,21 @@ router.post('/addMany', function (req, res, next) {
   });
 });
 //מחיקת אוביקט מDB
-router.delete('/delete/:id', function (req, res, next) {
-  pets.findOneAndDelete({ _id: req.params.id }).then(function (pet) {
-    res.send(pet)
+router.delete('/delete/:id', async (req, res, next) => {
+
+  await pets.findOneAndDelete({ _id: req.params.id }).then(function (pet) {
+
+    res.send("The object was successfully deleted")
   });
+
 });
 
 //עדכון אוביקט
-router.put('/update/:id', function (req, res, next) {
-  pets.findOneAndUpdate({ _id: req.params.id }, req.body).then(function (pet) {
-    pets.findOne({ _id: req.params.id }).then(function (pet) {
+router.put('/put/:id', async (req, res, next) => {
+  await pets.findOneAndUpdate({ _id: req.params.id }, req.body).then(async (pet) => {
+    await pets.findOne({ _id: req.params.id }).then(function (pet) {
       res.send(pet)
     });
   });
 });
-
 module.exports = router;

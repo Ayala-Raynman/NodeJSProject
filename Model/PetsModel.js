@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-let pets = new Schema(
+const pets = new Schema(
     {
         name: {
             type: String
